@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/paginaInicial">
+
+    <fragment
+        android:id="@+id/notificaciones"
+        android:name="com.example.notipush.fragments.Notificaciones"
+        android:label="@string/menu_notificaciones"
+        tools:layout="@layout/fragment_notificaciones" />
+    <activity
+        android:id="@+id/inicio"
+        android:name="com.example.notipush.Inicio"
+        android:label="activity_inicio"
+        tools:layout="@layout/activity_inicio" />
+    <fragment
+        android:id="@+id/paginaInicial"
+        android:name="com.example.notipush.PaginaInicial"
+        android:label="@string/menu_inicio"
+        tools:layout="@layout/fragment_pagina_inicial" />
+</navigation>
