@@ -1,4 +1,4 @@
-package com.example.notipush;
+package com.example.notipush.fragments;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.notipush.R;
 
 public class PaginaInicial extends Fragment {
 
@@ -19,7 +21,7 @@ public class PaginaInicial extends Fragment {
     public PaginaInicial() {
         // Required empty public constructor
     }
-    
+
     public static PaginaInicial newInstance(String param1, String param2) {
         PaginaInicial fragment = new PaginaInicial();
         Bundle args = new Bundle();

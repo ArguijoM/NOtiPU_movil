@@ -8,4 +8,5 @@
 
     <dimen name="imagen_perfil_largo">700px</dimen>
     <dimen name="imagen_perfil_ancho">250px</dimen>
+    <dimen name="tamano_letra">24dp</dimen>
 </resources>

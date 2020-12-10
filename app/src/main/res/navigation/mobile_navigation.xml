@@ -17,7 +17,7 @@
         tools:layout="@layout/activity_inicio" />
     <fragment
         android:id="@+id/paginaInicial"
-        android:name="com.example.notipush.PaginaInicial"
+        android:name="com.example.notipush.fragments.PaginaInicial"
         android:label="@string/menu_inicio"
         tools:layout="@layout/fragment_pagina_inicial" />
 </navigation>
