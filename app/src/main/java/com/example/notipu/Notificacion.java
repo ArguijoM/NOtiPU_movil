@@ -1,4 +1,4 @@
-package com.example.notipush;
+package com.example.notipu;
 
 public class Notificacion {
     private String asunto;

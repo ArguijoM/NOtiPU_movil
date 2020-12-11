@@ -1,4 +1,4 @@
-package com.example.notipush.fragments;
+package com.example.notipu.fragments;
 
 import android.os.Bundle;
 
@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.notipush.R;
+import com.example.notipu.R;
 
 public class PaginaInicial extends Fragment {
 

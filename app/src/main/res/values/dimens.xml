@@ -9,4 +9,6 @@
     <dimen name="imagen_perfil_largo">700px</dimen>
     <dimen name="imagen_perfil_ancho">250px</dimen>
     <dimen name="tamano_letra">24dp</dimen>
+    <dimen name="tamano_letra_encabezado">30dp</dimen>
+    <dimen name="tamano_layout_encabezado">80dp</dimen>
 </resources>

@@ -1,6 +1,6 @@
-package com.example.notipush.fragments;
+package com.example.notipu.fragments;
 
-import android.app.Notification;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,15 +8,18 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.notipush.ListaNotificaciones;
-import com.example.notipush.Notificacion;
-import com.example.notipush.R;
+import com.example.notipu.DetalleNotificacion;
+import com.example.notipu.ListaNotificaciones;
+import com.example.notipu.MainActivity;
+import com.example.notipu.Notificacion;
+import com.example.notipu.R;
 
 import java.util.ArrayList;
 
-public class Notificaciones extends Fragment {
+public class Notificaciones extends Fragment implements AdapterView.OnItemClickListener {
     View vista;
     ListView lv;
     ArrayList<Notificacion> notificaciones;
@@ -54,6 +57,7 @@ public class Notificaciones extends Fragment {
         // Inflate the layout for this fragment
         vista = inflater.inflate(R.layout.fragment_notificaciones, container, false);
         lv=vista.findViewById(R.id.listado);
+        lv.setOnItemClickListener(this);
 
         generarListado();
         ListaNotificaciones miAdaptador = new ListaNotificaciones(getContext(),R.layout.lista_notificaciones,notificaciones);
@@ -68,5 +72,12 @@ public class Notificaciones extends Fragment {
         notificaciones.add(new Notificacion("Becas Delfin","becas del grupo Delfin","2CM1"));
         notificaciones.add(new Notificacion("Servicio social","informacion del servicio social","6CM1"));
         notificaciones.add(new Notificacion("Inscripciones","informacion de las inscripciones","6CM1"));
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getContext(),DetalleNotificacion.class);
+        intent.putExtra("id",id);
+        startActivity(intent);
     }
 }

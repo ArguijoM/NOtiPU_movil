@@ -1,4 +1,4 @@
-package com.example.notipush;
+package com.example.notipu;
 
 import org.junit.Test;
 

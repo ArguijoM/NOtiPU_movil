@@ -1,4 +1,4 @@
-package com.example.notipush;
+package com.example.notipu;
 
 import android.content.Context;
 import android.view.LayoutInflater;
