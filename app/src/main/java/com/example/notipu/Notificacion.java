@@ -3,9 +3,9 @@ package com.example.notipu;
 public class Notificacion {
     private String asunto;
     private String descripcion;
-    private String grupo;
+    private int grupo;
 
-    public Notificacion(String asunto, String descripcion, String grupo) {
+    public Notificacion(String asunto, String descripcion, int grupo) {
         this.asunto = asunto;
         this.descripcion = descripcion;
         this.grupo = grupo;
@@ -27,11 +27,11 @@ public class Notificacion {
         this.descripcion = descripcion;
     }
 
-    public String getGrupo() {
+    public int getGrupo() {
         return grupo;
     }
 
-    public void setGrupo(String grupo) {
+    public void setGrupo(int grupo) {
         this.grupo = grupo;
     }
 }

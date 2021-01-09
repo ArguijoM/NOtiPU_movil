@@ -5,17 +5,30 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.notipu.DetalleNotificacion;
+import com.example.notipu.HttpsTrustManager;
 import com.example.notipu.ListaNotificaciones;
 import com.example.notipu.MainActivity;
 import com.example.notipu.Notificacion;
 import com.example.notipu.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -23,6 +36,8 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
     View vista;
     ListView lv;
     ArrayList<Notificacion> notificaciones;
+    private static final String url ="https://192.168.56.1/notipu/public/api/notificaciones";
+    RequestQueue requestQueue; //Respuesta de la consulta
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -49,6 +64,7 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -58,20 +74,53 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
         vista = inflater.inflate(R.layout.fragment_notificaciones, container, false);
         lv=vista.findViewById(R.id.listado);
         lv.setOnItemClickListener(this);
-
-        generarListado();
-        ListaNotificaciones miAdaptador = new ListaNotificaciones(getContext(),R.layout.lista_notificaciones,notificaciones);
-        lv.setAdapter(miAdaptador);
+        requestQueue = Volley.newRequestQueue(getContext());
+        stringRequest();
         return vista;
     }
 
-    private void generarListado() {
-        notificaciones = new ArrayList<Notificacion>();
-        notificaciones.add(new Notificacion("Becas 2010","becas del periodo 2010","2CM1"));
-        notificaciones.add(new Notificacion("Becas BEIFI","becas del grupo BEIFI","4CM1"));
-        notificaciones.add(new Notificacion("Becas Delfin","becas del grupo Delfin","2CM1"));
-        notificaciones.add(new Notificacion("Servicio social","informacion del servicio social","6CM1"));
-        notificaciones.add(new Notificacion("Inscripciones","informacion de las inscripciones","6CM1"));
+    private void stringRequest(){
+        notificaciones = new ArrayList<Notificacion>();//inicializamos la lista de contactos
+        //inicializamos el adaptador
+        final ListaNotificaciones miAdaptador = new ListaNotificaciones(getContext(),R.layout.lista_notificaciones,notificaciones);
+        lv.setAdapter(miAdaptador);
+        //Consulta
+        HttpsTrustManager.allowAllSSL();
+        StringRequest request = new StringRequest(
+                Request.Method.GET,
+                url,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String respuesta = jsonObject.getString("estado");
+                    JSONArray jsonArray = jsonObject.getJSONArray("notificaciones");
+                    for(int i=0; i<jsonArray.length();i++){
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        int idNotificacion = object.getInt("idNotificacion");
+                        String titulo = object.getString("titulo");
+                        String descripcion = object.getString("descripcion");
+                        String fecha = object.getString("fecha");
+                        int Grupo_idGrupo = object.getInt("Grupo_idGrupo");
+                        Notificacion not = new Notificacion(titulo,descripcion,Grupo_idGrupo);
+                        notificaciones.add(not);
+                        miAdaptador.notifyDataSetChanged();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error de volley", error.toString());
+                        Toast.makeText(getContext(), "Error de respuesta"+error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+        ) ;
+        requestQueue.add(request);
     }
 
     @Override
@@ -80,4 +129,5 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
         intent.putExtra("id",id);
         startActivity(intent);
     }
+
 }
