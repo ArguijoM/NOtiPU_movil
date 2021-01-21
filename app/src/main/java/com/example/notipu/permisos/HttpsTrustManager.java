@@ -1,4 +1,4 @@
-package com.example.notipu;
+package com.example.notipu.permisos;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -21,7 +21,6 @@ public class HttpsTrustManager implements X509TrustManager {
     public void checkClientTrusted(
             java.security.cert.X509Certificate[] x509Certificates, String s)
             throws java.security.cert.CertificateException {
-
     }
 
     @Override

@@ -20,9 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.notipu.DetalleNotificacion;
-import com.example.notipu.HttpsTrustManager;
+import com.example.notipu.permisos.HttpsTrustManager;
 import com.example.notipu.ListaNotificaciones;
-import com.example.notipu.MainActivity;
 import com.example.notipu.Notificacion;
 import com.example.notipu.R;
 
@@ -33,10 +32,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Notificaciones extends Fragment implements AdapterView.OnItemClickListener {
+
+    private static final String ip="192.168.43.100";
+
     View vista;
     ListView lv;
     ArrayList<Notificacion> notificaciones;
-    private static final String url ="https://192.168.56.1/notipu/public/api/notificaciones";
     RequestQueue requestQueue; //Respuesta de la consulta
 
     private static final String ARG_PARAM1 = "param1";
@@ -88,25 +89,28 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
         HttpsTrustManager.allowAllSSL();
         StringRequest request = new StringRequest(
                 Request.Method.GET,
-                url,new Response.Listener<String>() {
+                "http://"+ip+"/NOtiPU_web/php/notipu/public/api/notificaciones",new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String respuesta = jsonObject.getString("estado");
-                    JSONArray jsonArray = jsonObject.getJSONArray("notificaciones");
-                    for(int i=0; i<jsonArray.length();i++){
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        int idNotificacion = object.getInt("idNotificacion");
-                        String titulo = object.getString("titulo");
-                        String descripcion = object.getString("descripcion");
-                        String fecha = object.getString("fecha");
-                        int Grupo_idGrupo = object.getInt("Grupo_idGrupo");
-                        Notificacion not = new Notificacion(titulo,descripcion,Grupo_idGrupo);
-                        notificaciones.add(not);
-                        miAdaptador.notifyDataSetChanged();
+                    if(respuesta.equals("1")){
+                        JSONArray jsonArray = jsonObject.getJSONArray("notificaciones");
+                        for(int i=0; i<jsonArray.length();i++){
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            int idNotificacion = object.getInt("idNotificacion");
+                            String titulo = object.getString("titulo");
+                            String descripcion = object.getString("descripcion");
+                            String fecha = object.getString("fecha");
+                            int Grupo_idGrupo = object.getInt("Grupo_idGrupo");
+                            Notificacion not = new Notificacion(titulo,descripcion,Grupo_idGrupo);
+                            notificaciones.add(not);
+                            miAdaptador.notifyDataSetChanged();
+                        }
+                    }else{
+                        Toast.makeText(getContext(), "No hay notificaciones", Toast.LENGTH_LONG).show();
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -116,7 +120,7 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error de volley", error.toString());
-                        Toast.makeText(getContext(), "Error de respuesta"+error.toString(), Toast.LENGTH_LONG).show();
+                       // Toast.makeText(getContext(), "Error de respuesta"+error.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
         ) ;
@@ -125,8 +129,11 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String asunto = notificaciones.get(position).getAsunto();
+        String descripcion = notificaciones.get(position).getDescripcion();
         Intent intent = new Intent(getContext(),DetalleNotificacion.class);
-        intent.putExtra("id",id);
+        intent.putExtra("asunto",asunto);
+        intent.putExtra("descripcion",descripcion);
         startActivity(intent);
     }
 

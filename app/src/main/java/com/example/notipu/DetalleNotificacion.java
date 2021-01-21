@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 public class DetalleNotificacion extends AppCompatActivity {
     int id;
+    String asunto,descripcion;
     TextView titulo,mensaje;
     private ActionBar actionBar;
 
@@ -30,13 +31,14 @@ public class DetalleNotificacion extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        Bundle b = getIntent().getExtras();
-        id = b.getInt("id");
+       titulo = findViewById(R.id.titulo);
+       mensaje = findViewById(R.id.mensaje);
+       Bundle b = getIntent().getExtras();
+       asunto=b.getString("asunto");
+       descripcion=b.getString("descripcion");
 
-        titulo = findViewById(R.id.titulo);
-        mensaje = findViewById(R.id.mensaje);
-        titulo.setText("Becas 2010");
-        mensaje.setText("Les recordamos que deben subir sus documentos antes de la fecha mencionada para que puedan quedar inscritos");
+       titulo.setText(asunto);
+       mensaje.setText(descripcion);
 
 
     }
