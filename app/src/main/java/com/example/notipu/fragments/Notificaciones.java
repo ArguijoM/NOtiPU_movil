@@ -1,6 +1,8 @@
 package com.example.notipu.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -40,6 +42,8 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
     ArrayList<Notificacion> notificaciones;
     RequestQueue requestQueue; //Respuesta de la consulta
 
+    int idUsuario;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -76,11 +80,14 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
         lv=vista.findViewById(R.id.listado);
         lv.setOnItemClickListener(this);
         requestQueue = Volley.newRequestQueue(getContext());
-        stringRequest();
+        SharedPreferences preferences = this.getActivity().getSharedPreferences("usuario", Context.MODE_PRIVATE);
+        idUsuario=preferences.getInt("idUsuario",0);
+        getAgrupamiento();
+
         return vista;
     }
 
-    private void stringRequest(){
+    private void getNotificaciones(int idGrupo){
         notificaciones = new ArrayList<Notificacion>();//inicializamos la lista de contactos
         //inicializamos el adaptador
         final ListaNotificaciones miAdaptador = new ListaNotificaciones(getContext(),R.layout.lista_notificaciones,notificaciones);
@@ -89,14 +96,14 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
         HttpsTrustManager.allowAllSSL();
         StringRequest request = new StringRequest(
                 Request.Method.GET,
-                "http://"+ip+"/NOtiPU_web/php/notipu/public/api/notificaciones",new Response.Listener<String>() {
+                "http://"+ip+"/NOtiPU_web/php/notipu/public/api/notificacionesGrupo/"+idGrupo,new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String respuesta = jsonObject.getString("estado");
                     if(respuesta.equals("1")){
-                        JSONArray jsonArray = jsonObject.getJSONArray("notificaciones");
+                        JSONArray jsonArray = jsonObject.getJSONArray("notificacion");
                         for(int i=0; i<jsonArray.length();i++){
                             JSONObject object = jsonArray.getJSONObject(i);
                             int idNotificacion = object.getInt("idNotificacion");
@@ -125,6 +132,48 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                 }
         ) ;
         requestQueue.add(request);
+    }
+
+    private void getAgrupamiento(){
+        HttpsTrustManager.allowAllSSL();
+        StringRequest request = new StringRequest(
+                Request.Method.GET,
+                "http://"+ip+"/NOtiPU_web/php/notipu/public/api/agrupamientosUsuario/"+idUsuario,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String respuesta = jsonObject.getString("estado");
+                    if(respuesta.equals("1")){
+                        JSONArray jsonArray = jsonObject.getJSONArray("agrupamiento");
+                        for(int i=0; i<jsonArray.length();i++){
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            int Grupo_idGrupo = object.getInt("Grupo_idGrupo");
+                            getNotificaciones(Grupo_idGrupo);
+                        }
+                    }else{
+                        Toast.makeText(getContext(), "No hay Agrupamientos", Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error de volley", error.toString());
+                        // Toast.makeText(getContext(), "Error de respuesta"+error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+        ) ;
+        requestQueue.add(request);
+    }
+
+    private void cargarInformacion(){
+        SharedPreferences preferences = this.getActivity().getSharedPreferences("usuario", Context.MODE_PRIVATE);
+        idUsuario=preferences.getInt("idUsuario",0);
+        getAgrupamiento();
     }
 
     @Override

@@ -100,9 +100,12 @@ public class Inicio extends AppCompatActivity {
                         programa=jsonObject.getString("programa");
                         getPrograma(programa);
                         getUsuario(boleta);
-
-                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                        startActivity(intent);
+                        if(idUsuario==0){
+                            cargarInformacion();
+                        }else{
+                            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                            startActivity(intent);
+                        }
                     }else{
                         Toast.makeText(getApplicationContext(), "Revise su información", Toast.LENGTH_LONG).show();
                     }
@@ -133,7 +136,6 @@ public class Inicio extends AppCompatActivity {
 
     private void guardarInformacion() {
         SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-        //nombrecompleto  boleta  tipo  programa
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("info", 1);
         editor.putInt("idUsuario", idUsuario);

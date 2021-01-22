@@ -21,8 +21,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.notipu.permisos.HttpsTrustManager;
 import com.example.notipu.firebase.MyFirebaseInstanceIdService;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -32,11 +30,6 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,18 +45,22 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        putUsuario(idUsuario);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        token = MyFirebaseInstanceIdService.firebaseToken();
-
         requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-        cargarInformacion();
-        if(idUsuario==0){
-            cargarInformacion();
-        }else{
+        SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
+        idUsuario=preferences.getInt("idUsuario",0);
+
+        if(idUsuario!=0){
             putUsuario(idUsuario);
         }
 
@@ -106,19 +103,10 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void cargarInformacion(){
-        SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-        info=preferences.getInt("info",0);
-        idUsuario=preferences.getInt("idUsuario",0);
-        nombrecompleto = preferences.getString("nombrecompleto","No existe la información");
-        boleta = preferences.getString("boleta","No existe la información");
-        tipo = preferences.getString("tipo","No existe la información");
-        idPrograma = preferences.getInt("Programa_idPrograma",0);
-    }
-
     private void putUsuario(int id){
-        cargarInformacion();
-        String url = "http://"+ip+"/NOtiPU_web/php/notipu/public/api/usuarios/modificar/"+id;
+        token = MyFirebaseInstanceIdService.firebaseToken();
+        Log.d("Token:" ,token);
+        String url = "http://"+ip+"/NOtiPU_web/php/notipu/public/api/usuarios/modificarToken/"+id;
         HttpsTrustManager.allowAllSSL();
         StringRequest request = new StringRequest(
                 Request.Method.PUT,
@@ -143,11 +131,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> parametros = new HashMap<String,String>();
-                parametros.put("boleta",boleta);
-                parametros.put("nombrecompleto",nombrecompleto);
                 parametros.put("token",token);
-                parametros.put("tipo",tipo);
-                parametros.put("Programa_idPrograma", String.valueOf(idPrograma));
                 return parametros;
             }
         };
