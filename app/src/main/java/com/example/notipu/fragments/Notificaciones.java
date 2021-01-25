@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -35,10 +37,12 @@ import java.util.ArrayList;
 
 public class Notificaciones extends Fragment implements AdapterView.OnItemClickListener {
 
-    private static final String ip="192.168.43.100";
+    private static final String ip="192.168.0.29";
 
     View vista;
     ListView lv;
+    TextView ventana;
+    SwipeRefreshLayout refreshLayout;
     ArrayList<Notificacion> notificaciones;
     RequestQueue requestQueue; //Respuesta de la consulta
 
@@ -77,6 +81,16 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         vista = inflater.inflate(R.layout.fragment_notificaciones, container, false);
+        ventana = vista.findViewById(R.id.vetana);
+        refreshLayout=vista.findViewById(R.id.refresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getAgrupamiento();
+                refreshLayout.setRefreshing(false);
+            }
+        });
+
         lv=vista.findViewById(R.id.listado);
         lv.setOnItemClickListener(this);
         requestQueue = Volley.newRequestQueue(getContext());
@@ -103,6 +117,7 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                     JSONObject jsonObject = new JSONObject(response);
                     String respuesta = jsonObject.getString("estado");
                     if(respuesta.equals("1")){
+                        //ventana.setText("");
                         JSONArray jsonArray = jsonObject.getJSONArray("notificacion");
                         for(int i=0; i<jsonArray.length();i++){
                             JSONObject object = jsonArray.getJSONObject(i);
@@ -116,7 +131,8 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                             miAdaptador.notifyDataSetChanged();
                         }
                     }else{
-                        Toast.makeText(getContext(), "No hay notificaciones", Toast.LENGTH_LONG).show();
+                        Log.d("MENSAJE","No hay notificaciones");
+                        //Toast.makeText(getContext(), "No hay notificaciones", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -168,12 +184,6 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                 }
         ) ;
         requestQueue.add(request);
-    }
-
-    private void cargarInformacion(){
-        SharedPreferences preferences = this.getActivity().getSharedPreferences("usuario", Context.MODE_PRIVATE);
-        idUsuario=preferences.getInt("idUsuario",0);
-        getAgrupamiento();
     }
 
     @Override

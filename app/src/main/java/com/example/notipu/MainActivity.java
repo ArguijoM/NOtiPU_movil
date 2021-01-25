@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.notipu.firebase.MyFirebaseMessagingService;
 import com.example.notipu.permisos.HttpsTrustManager;
 import com.example.notipu.firebase.MyFirebaseInstanceIdService;
 import com.google.android.material.navigation.NavigationView;
@@ -35,7 +36,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ip="192.168.43.100";
+    private static final String ip="192.168.0.29";
 
     Button salir;
     String tipo,boleta,nombrecompleto,token;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         putUsuario(idUsuario);
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +62,17 @@ public class MainActivity extends AppCompatActivity {
 
         if(idUsuario!=0){
             putUsuario(idUsuario);
+        }
+
+        if(getIntent().getExtras()!=null){
+            if(getIntent().getExtras().getInt("msn")==1){
+                String title = getIntent().getExtras().getString("titulo");
+                String body =getIntent().getExtras().getString("cuerpo");
+                Intent intent = new Intent();
+                intent.putExtra("titulo",title);
+                intent.putExtra("cuerpo",body);
+                startActivity(intent);
+            }
         }
 
         salir = findViewById(R.id.salir);

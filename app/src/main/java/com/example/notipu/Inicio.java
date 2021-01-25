@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class Inicio extends AppCompatActivity {
 
-    private static final String ip="192.168.43.100";
+    private static final String ip="192.168.0.29";
 
     EditText clave;
     Button continuar;
@@ -70,16 +70,16 @@ public class Inicio extends AppCompatActivity {
                 tipo = spiner.getSelectedItem().toString();
                 switch (tipo){
                     case "ALUMNO":
-                       String urlAlumno ="http://sistemas.upiiz.ipn.mx/isc/nopu/api/alumno.php?boleta="+boleta;
-                       stringRequest(urlAlumno);
-                    break;
+                        String urlAlumno ="http://sistemas.upiiz.ipn.mx/isc/nopu/api/alumno.php?boleta="+boleta;
+                        stringRequest(urlAlumno);
+                        break;
                     case "EMPLEADO":
-                       String urlEmpleado ="http://sistemas.upiiz.ipn.mx/isc/nopu/api/empleado.php?numempleado="+boleta;
-                       stringRequest(urlEmpleado);
-                    break;
+                        String urlEmpleado ="http://sistemas.upiiz.ipn.mx/isc/nopu/api/empleado.php?numempleado="+boleta;
+                        stringRequest(urlEmpleado);
+                        break;
                     default:
                         Toast.makeText(getApplicationContext(), "Elija una de las 2 opciónes", Toast.LENGTH_LONG).show();
-                    break;
+                        break;
                 }
             }
         });
@@ -167,7 +167,7 @@ public class Inicio extends AppCompatActivity {
                             JSONObject object = jsonArray.getJSONObject(i);
                             idUsuario = object.getInt("idUsuario");
                             guardarInformacion();
-                           // Toast.makeText(getApplicationContext(), "idUsuario: "+idUsuario, Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(getApplicationContext(), "idUsuario: "+idUsuario, Toast.LENGTH_SHORT).show();
                         }
 
                     }else{
@@ -202,9 +202,9 @@ public class Inicio extends AppCompatActivity {
                     public void onResponse(String response) {
                         if(!response.isEmpty()){
                             getUsuario(boleta);
-                           //Toast.makeText(getApplicationContext(), "Usuario agregado satisfactoriamente", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Usuario agregado satisfactoriamente", Toast.LENGTH_SHORT).show();
                         }else{
-                           Toast.makeText(getApplicationContext(), "Agrege los datos correspondientes", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Agrege los datos correspondientes", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
