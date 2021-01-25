@@ -87,7 +87,6 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
             @Override
             public void onRefresh() {
                 getAgrupamiento();
-                refreshLayout.setRefreshing(false);
             }
         });
 
@@ -130,6 +129,7 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                             notificaciones.add(not);
                             miAdaptador.notifyDataSetChanged();
                         }
+                        refreshLayout.setRefreshing(false);
                     }else{
                         Log.d("MENSAJE","No hay notificaciones");
                         //Toast.makeText(getContext(), "No hay notificaciones", Toast.LENGTH_LONG).show();
@@ -143,7 +143,8 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error de volley", error.toString());
-                       // Toast.makeText(getContext(), "Error de respuesta"+error.toString(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_LONG).show();
+                        //refreshLayout.setRefreshing(false);
                     }
                 }
         ) ;
@@ -179,7 +180,8 @@ public class Notificaciones extends Fragment implements AdapterView.OnItemClickL
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error de volley", error.toString());
-                        // Toast.makeText(getContext(), "Error de respuesta"+error.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_LONG).show();
+                        refreshLayout.setRefreshing(false);
                     }
                 }
         ) ;

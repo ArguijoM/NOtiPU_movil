@@ -111,7 +111,7 @@ public class Inicio extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Error de conexión", Toast.LENGTH_LONG).show();
                 }
             }
         },
@@ -184,7 +184,7 @@ public class Inicio extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error de volley", error.toString());
-                        Toast.makeText(getApplicationContext(), "Error de respuesta"+error.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Error de conexión", Toast.LENGTH_LONG).show();
                     }
                 }
         ) ;
@@ -212,6 +212,7 @@ public class Inicio extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error de volley", error.toString());
+                        Toast.makeText(getApplicationContext(), "Error de conexión", Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
@@ -248,6 +249,7 @@ public class Inicio extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error de volley", error.toString());
+                        Toast.makeText(getApplicationContext(), "Error de conexión", Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
@@ -289,7 +291,6 @@ public class Inicio extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("Error de volley: : ", e.toString());
-                    // Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
                 }
             }
         },
@@ -297,7 +298,7 @@ public class Inicio extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error de volley", error.toString());
-                        Toast.makeText(getApplicationContext(), "Error de respuesta"+error.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Error de conexión", Toast.LENGTH_LONG).show();
                     }
                 }
         ) ;
